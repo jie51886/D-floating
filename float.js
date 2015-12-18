@@ -34,7 +34,7 @@ function accAdd(num1, num2){
     var n1 = suffixInteger(num1, max);
     var n2 = suffixInteger(num2, max);
 
-    return ( (n1 + n2)/Math.pow(10, max) ).toFixed(max);
+    return Number( ( (n1 + n2)/Math.pow(10, max) ).toFixed(max) );
 }
 
 // 减法
@@ -47,7 +47,7 @@ function accSubtr(num1, num2){
     var n1 = suffixInteger(num1, max);
     var n2 = suffixInteger(num2, max);
 
-    return ( (n1 - n2)/Math.pow(10, max) ).toFixed(max);
+    return Number( ( (n1 - n2)/Math.pow(10, max) ).toFixed(max) );
 }
 // 乘法
 function accMul(num1, num2){
