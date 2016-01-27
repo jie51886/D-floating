@@ -1,83 +1,109 @@
-/**
- * 获取小数点后数字长度
- * @author zhongjiewang
- * @param  {Number} num 数字
- * @return {Number}     长度
- */
-function decimalLength(num){
-    var str = num.toString();
-    var index = str.indexOf('.');
-    return index == -1 ? 0 : str.substr(index+1).length;
-}
+;(function(root, factory) {
 
-/**
- * 小数点后补齐0作为整数
- * @author zhongjiewang
- * @param  {Number} num    数字
- * @param  {Number} length 补齐的长度
- * @return {Number}        整数
- */
-function suffixInteger(num, length){
-    var str = num.toString();
-    var decimalLen = decimalLength(num);
-    str += Math.pow(10, length - decimalLen).toString().substr(1);
-    return Number( str.replace('.', '') );
-}
+    // Support AMD
+    if (typeof define === 'function' && define.amd) {
+        define([], factory);
 
-// 加法
-function accAdd(num1, num2){
-    var r1 = decimalLength(num1);
-    var r2 = decimalLength(num2);
+        // Support CommonJS
+    } else if (typeof exports === 'object') {
+        var accFloating = factory();
 
-    var max = Math.max(r1, r2);
+        // Support NodeJS & Component, which allow module.exports to be a function
+        if (typeof module === 'object' && module && module.exports) {
+            exports = module.exports = accFloating;
+        }
 
-    var n1 = suffixInteger(num1, max);
-    var n2 = suffixInteger(num2, max);
+        // Support CommonJS 1.1.1 spec
+        exports.accFloating = accFloating;
 
-    return Number( ( (n1 + n2)/Math.pow(10, max) ).toFixed(max) );
-}
+        // Support vanilla script loading
+    } else {
+        root.accFloating = factory();
+    }
 
-// 减法
-function accSubtr(num1, num2){
-    var r1 = decimalLength(num1);
-    var r2 = decimalLength(num2);
+}(this, function() {
+    /**
+     * 获取小数点后数字长度
+     * @author zhongjiewang
+     * @param  {Number} num 数字
+     * @return {Number}     长度
+     */
+    function decimalLength(num) {
+        var str = num.toString();
+        var index = str.indexOf('.');
+        return index == -1 ? 0 : str.substr(index + 1).length;
+    }
 
-    var max = Math.max(r1, r2);
+    /**
+     * 小数点后补齐0作为整数
+     * @author zhongjiewang
+     * @param  {Number} num    数字
+     * @param  {Number} length 补齐的长度
+     * @return {Number}        整数
+     */
+    function suffixInteger(num, length) {
+        var str = num.toString();
+        var decimalLen = decimalLength(num);
+        str += Math.pow(10, length - decimalLen).toString().substr(1);
+        return Number(str.replace('.', ''));
+    }
 
-    var n1 = suffixInteger(num1, max);
-    var n2 = suffixInteger(num2, max);
+    // 加法
+    function accAdd(num1, num2) {
+        var r1 = decimalLength(num1);
+        var r2 = decimalLength(num2);
 
-    return Number( ( (n1 - n2)/Math.pow(10, max) ).toFixed(max) );
-}
-// 乘法
-function accMul(num1, num2){
-    var r1 = decimalLength(num1);
-    var r2 = decimalLength(num2);
+        var max = Math.max(r1, r2);
 
-    var max = Math.max(r1, r2);
+        var n1 = suffixInteger(num1, max);
+        var n2 = suffixInteger(num2, max);
 
-    var n1 = suffixInteger(num1, max);
-    var n2 = suffixInteger(num2, max);
+        return Number(((n1 + n2) / Math.pow(10, max)).toFixed(max));
+    }
 
-    return n1*n2/Math.pow(10, max*2);
+    // 减法
+    function accSubtr(num1, num2) {
+        var r1 = decimalLength(num1);
+        var r2 = decimalLength(num2);
 
-}
-// 除法
-function accDiv(num1, num2){
-    var r1 = decimalLength(num1);
-    var r2 = decimalLength(num2);
+        var max = Math.max(r1, r2);
 
-    var max = Math.max(r1, r2);
+        var n1 = suffixInteger(num1, max);
+        var n2 = suffixInteger(num2, max);
 
-    var n1 = suffixInteger(num1, max);
-    var n2 = suffixInteger(num2, max);
+        return Number(((n1 - n2) / Math.pow(10, max)).toFixed(max));
+    }
+    // 乘法
+    function accMul(num1, num2) {
+        var r1 = decimalLength(num1);
+        var r2 = decimalLength(num2);
 
-    return n1/n2;
-}
+        var max = Math.max(r1, r2);
 
-module.exports = {
-    add: accAdd,
-    subtr: accSubtr,
-    mul: accMul,
-    div: accDiv
-}
+        var n1 = suffixInteger(num1, max);
+        var n2 = suffixInteger(num2, max);
+
+        return n1 * n2 / Math.pow(10, max * 2);
+
+    }
+    // 除法
+    function accDiv(num1, num2) {
+        var r1 = decimalLength(num1);
+        var r2 = decimalLength(num2);
+
+        var max = Math.max(r1, r2);
+
+        var n1 = suffixInteger(num1, max);
+        var n2 = suffixInteger(num2, max);
+
+        return n1 / n2;
+    }
+
+    return {
+        add: accAdd,
+        subtr: accSubtr,
+        mul: accMul,
+        div: accDiv
+    }
+
+}));
